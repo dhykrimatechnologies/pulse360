@@ -24,6 +24,12 @@
       "dom"
     ]
   },
+  "include": [
+    "src/**/*.ts"  // This should include all TypeScript files in the src directory
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,

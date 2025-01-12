@@ -1,21 +1,28 @@
 import { Component, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';  // Import CommonModule here
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 declare var $: any;
+import {User} from '../../models/user.model'
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports:[NgbDropdownModule],
+  imports:[NgbDropdownModule, CommonModule],
   templateUrl: './navigation.component.html'
 })
 export class NavigationComponent implements AfterViewInit {
   @Output() toggleSidebar = new EventEmitter<void>();
-
-
+  loggedIn = false;
+  user$: Observable<User | null>;
   public showSearch = false;
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: NgbModal, private authService:AuthService, private router:Router) {
+    this.user$ = this.authService.getUser(); // Get the user observable from AuthService
   }
 
   // This is for Notifications
@@ -111,5 +118,24 @@ export class NavigationComponent implements AfterViewInit {
     icon: 'de'
   }]
 
+  logOut(){
+    this.authService.logout()
+    this.loggedIn = false;
+    if (!this.loggedIn) {
+      // If the user is not logged in, redirect to home page
+      this.router.navigate(['']);  // Redirect to the home page
+    }
+  }
+
+  ngOnInit(){
+    this.authService.loggedIn$.subscribe((status) => {
+      this.loggedIn = status;
+
+      if (!this.loggedIn) {
+        // If the user is not logged in, redirect to home page
+        this.router.navigate(['']);  // Redirect to the home page
+      }
+    });
+  }
   ngAfterViewInit() { }
 }

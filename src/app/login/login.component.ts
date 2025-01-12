@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit{
   errorMessage: string = '';
   loginForm: FormGroup;
   user:any;
-  constructor(private fb: FormBuilder, private authService:AuthService) {
+  constructor(private fb: FormBuilder, private authService:AuthService, private router:Router) {
     // Initialize form group
     this.loginForm = this.fb.group({
       Email: ['', [Validators.required, Validators.email]],
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit{
         (user) => {
           if (user) {
             this.user =  user // Store user info when it is available
-
+            this.router.navigate(['/full/dashboard'])
           }
           // alert (response.message);
         },

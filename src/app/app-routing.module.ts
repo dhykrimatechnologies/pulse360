@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { FullComponent } from './layouts/full/full.component';
 import { LoginComponent } from './login/login.component';
+import { authGuard } from './guard/auth.guard';
 
 export const Approutes: Routes = [
   {
@@ -12,11 +13,13 @@ export const Approutes: Routes = [
   {
     path: 'full',
     component: FullComponent,
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
+        canActivate: [authGuard],
       },
       {
         path: 'about',
@@ -33,3 +36,4 @@ export const Approutes: Routes = [
     redirectTo: '/starter'
   }
 ];
+
